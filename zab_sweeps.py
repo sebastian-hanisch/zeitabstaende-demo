@@ -9,8 +9,10 @@ from __future__ import annotations
 
 import ast
 import hashlib
+import io
 import json
 import statistics
+import tokenize
 from pathlib import Path
 
 import numpy as np
@@ -28,17 +30,30 @@ ROOT = Path(__file__).resolve().parent
 HASHED_MODULES = ("zab_rng.py", "zab_network.py", "zab_model.py", "zab_graph.py", "zab_schedule.py", "zab_witness.py", "zab_bridge.py", "zab_sweeps.py")
 
 
+def normalized_source(src: str) -> str:
+    """Quelltext ohne Docstrings, Kommentare, Leerzeilen und überzählige Leerzeichen. Bewusst textbasiert statt `ast.dump`: der Syntaxbaum-Ausdruck ändert
+    sich zwischen Python-Versionen (die CI läuft mit einer anderen Version als der Rechner der Messung), der normalisierte Text nicht."""
+    tree = ast.parse(src)
+    doc_lines = set()
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)) and node.body:
+            first = node.body[0]
+            if isinstance(first, ast.Expr) and isinstance(getattr(first, "value", None), ast.Constant) and isinstance(first.value.value, str):
+                doc_lines.update(range(first.lineno, first.end_lineno + 1))
+    lines = src.splitlines()
+    for tok in tokenize.generate_tokens(io.StringIO(src).readline):
+        if tok.type == tokenize.COMMENT:
+            row, col = tok.start
+            lines[row - 1] = lines[row - 1][:col]
+    kept = [" ".join(line.split()) for i, line in enumerate(lines, 1) if i not in doc_lines]
+    return "\n".join(line for line in kept if line)
+
+
 def generator_hash() -> str:
-    """Hash über den Rechenkern (Syntaxbäume ohne Kommentare und Docstrings, unabhängig von Zeilenenden): ändert sich der Kern, ist die Ergebnisdatei veraltet."""
+    """Hash über den Rechenkern (normalisierter Quelltext ohne Kommentare und Docstrings, unabhängig von Zeilenenden und Python-Version): ändert sich der Kern, ist die Ergebnisdatei veraltet."""
     h = hashlib.sha256()
     for name in HASHED_MODULES:
-        tree = ast.parse((ROOT / name).read_text(encoding="utf-8"))
-        for node in ast.walk(tree):
-            if isinstance(node, (ast.Module, ast.FunctionDef, ast.ClassDef, ast.AsyncFunctionDef)) and node.body \
-                    and isinstance(node.body[0], ast.Expr) and isinstance(getattr(node.body[0], "value", None), ast.Constant) \
-                    and isinstance(node.body[0].value.value, str):
-                node.body = node.body[1:] or [ast.Pass()]
-        h.update(name.encode() + b"\0" + ast.dump(tree).encode())
+        h.update(name.encode() + b"\0" + normalized_source((ROOT / name).read_text(encoding="utf-8")).encode() + b"\0")
     return h.hexdigest()[:16]
 
 
