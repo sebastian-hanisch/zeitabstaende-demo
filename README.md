@@ -5,7 +5,7 @@
 
 Diese Demo gehört zur Linie **Takt und Periodizität** der Konzepte-Reihe für die Website „Sebastian Hanisch – Operations Research und Machine Learning“. Die Demo ist **nicht periodisch**: Ein Umlaufplan gilt einmal, jede Bedingung ist eine Differenz zweier Zeitpunkte mit Mindest- und Höchstabstand (Fahrzeit, Halt, Wende, Umsteigeanschluss, Zugfolge). Ein Bellman-Ford-Lauf auf dem Bedingungsgraphen entscheidet, ob der Plan **überhaupt möglich** ist (kein Kreis positiver Länge), und liefert **früheste und späteste Lage** und den **Spielraum** jedes Ereignisses. Die Vorstufe zum Takt: Experiment 5 lässt dieselben Bedingungen modulo *T* gelten. Vehikel ist je ein Umlauf der Linien des Netzgenerators der Fall-Demo `taktfahrplan-demo` (**synthetisch, Annahmen, keine Echtdaten**). Die Anschlussliste („die *k* am stärksten nachgefragten Umstiege, je Richtung gezählt“) und die Richtung „gerichtet“ sind **Planungsannahmen**. Die Höchstwartezeit *W* am Anschluss wird überall in dieser Demo **über der Mindest-Umsteigezeit gemessen**.
 
-Nachbarn: `bellman-ford-demo` zeigt das Verfahren (negative Kreise, Runde für Runde); `kritischer-pfad-demo` rechnet den kritischen Pfad ohne Höchstabstände und führt Zeitabstände zwischen Aufgaben ausdrücklich als eigene Demo; `job-shop-demo` und `shifting-bottleneck-demo` behandeln die Wahl der Reihenfolge; `kreise-aufloesen-demo` das Streichen bis zur Kreisfreiheit. Der Algorithmus allein trägt diese Demo nicht (er ist Lehrbuchstoff und steht in `bellman-ford-demo`); es tragen die Befunde auf dem Fahrplan unten.
+Nachbarn: `bellman-ford-demo` zeigt das Verfahren (negative Kreise, Runde für Runde); `kritischer-pfad-demo` rechnet den kritischen Pfad ohne Höchstabstände und führt Zeitabstände zwischen Aufgaben ausdrücklich als eigene Demo; `job-shop-demo` und `shifting-bottleneck-demo` behandeln die Wahl der Reihenfolge; `kreise-aufloesen-demo` das Streichen bis zur Kreisfreiheit. Der Algorithmus allein reicht für diese Demo nicht (er ist Lehrbuchstoff und steht in `bellman-ford-demo`); es zählen die Befunde auf dem Fahrplan unten.
 
 ## Warum dieses Problem
 
@@ -138,7 +138,7 @@ Wo das Zeitlimit nicht reichte (20 von 1560 Netzen in der gespeicherten Messung;
 
 ## Bewusst nicht umgesetzt
 
-- **Zeit-Kosten-Abwägung** (Beschleunigen gegen Geld, ein lineares Programm): kein tragfähiger Tab in dieser Kulisse; `kritischer-pfad-demo` führt sie als eigene Demo (bisher keine).
+- **Zeit-Kosten-Abwägung** (Beschleunigen gegen Geld, ein lineares Programm): kein haltbarer Tab in dieser Kulisse; `kritischer-pfad-demo` führt sie als eigene Demo (bisher keine).
 - **Zugfolge mit freier Reihenfolge im Hauptplan:** Die Wahl der Reihenfolge ist Job-Shop (`job-shop-demo`, `shifting-bottleneck-demo`); Experiment 4 prüft sie nur als Machbarkeit.
 - **Anschlüsse streichen bis zur Machbarkeit als Planungswerkzeug:** Experiment 5 zeigt den größten haltbaren Anteil, die Wahl der gestrichenen Anschlüsse ist Feedback-Arc-Set (`kreise-aufloesen-demo`).
 - **Verspätungen, Zufallsdauern, Fahrzeugumlauf, Echtdaten und Dateiimport:** nicht Thema; das Netz ist synthetisch.
