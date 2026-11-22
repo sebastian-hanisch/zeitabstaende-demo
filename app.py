@@ -120,7 +120,7 @@ with st.expander("So funktioniert ein Plan aus Zeitabständen", expanded=True):
 2. **Der Bedingungsgraph** hat zwei Kanten je Fenster: $u \\to v$ mit Gewicht $+l$ und, wenn es einen Höchstabstand gibt, $v \\to u$ mit Gewicht $-h$.
 3. **Ein Kreis positiver Länge heißt unmöglich:** Die Mindestabstände entlang des Kreises sind zusammen länger, als die Höchstabstände erlauben. Ein Kreis *ohne*
    Höchstabstand (ein **Zeitkreis**) ist sogar durch keine Lockerung der Wartezeit aufzulösen.
-4. **Sonst** ist der **längste Weg** ab der Quelle die früheste Lage jedes Ereignisses, der **Rückwärtslauf** vom Gesamtende die späteste. Die Differenz ist der **Spielraum**;
+4. **Sonst** ist der **längste Weg** ab der Quelle die früheste Lage jedes Ereignisses, der **Rückwärtslauf** vom Gesamtende die späteste. Die Differenz ist der **Spielraum** (in der Netzplantechnik Gesamtpuffer, englisch Total Float oder Slack);
    Ereignisse mit Spielraum 0 sind **kritisch**.
 
 | Bogen | Fenster [Mindest-, Höchstabstand] in Minuten | Regler |
@@ -461,7 +461,7 @@ $$ w(C) = \sum_{\text{Mindestabstände in } C} l \;-\; \sum_{\text{Höchstabstä
 
 *Beweisidee, „nur wenn“:* Addiert man die Ungleichungen $x_v - x_u \ge w$ entlang eines Kreises, hebt sich die linke Seite auf, es bleibt $0 \ge w(C)$.
 
-**Lagen.** Mit Quelle $z$ ($x_z = 0$) und Senke $t$ sowie $L(a \to b)$ als Länge des längsten Weges:
+**Lagen.** Mit Quelle $z$ ($x_z = 0$) und Senke $t$ sowie $L(a \to b)$ als Länge des längsten Weges (der Spielraum $s_e$ heißt in der Netzplantechnik Gesamtpuffer, englisch Total Float oder Slack):
 
 $$ x_e^{\min} = L(z \to e), \qquad D = \max_e x_e^{\min}, \qquad x_e^{\max} = D - L(e \to t), \qquad s_e = x_e^{\max} - x_e^{\min}. $$
 
